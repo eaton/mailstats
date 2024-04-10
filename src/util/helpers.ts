@@ -57,7 +57,7 @@ export function getRecipient(input: ParsedMail) {
  * an array of strings. Returns `undefined` if no labels exist.
  */
 export function getMessageLabels(input: ParsedMail) {
-  const labels = input.headers.get('X-Gmail-Labels');
+  const labels = input.headers.get('x-gmail-labels');
   if (labels) {
     return labels.toString().split(',').map(l => l.trim());
   }

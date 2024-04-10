@@ -1,4 +1,4 @@
-import { AddressObject, Attachment, EmailAddress, ParsedMail } from "mailparser";
+import { AddressObject, Attachment, EmailAddress, ParsedMail, Headers, HeaderValue, StructuredHeader, HeaderLines } from "mailparser";
 
 import { canParse, parse } from "@eatonfyi/urls";
 import { nanohash } from "@eatonfyi/ids";
@@ -50,7 +50,7 @@ export function formatMessage(input: ParsedMail): MboxMessage {
     recipient: getRecipient(input),
     date: input.date,
     labels: getMessageLabels(input),
-    headers: undefined,
+    headers: formatHeaderLines(input.headerLines),
     text: input.text,
     html: input.html || undefined,
     meta: undefined,
@@ -70,6 +70,7 @@ function formatAttachment(mid: string, input: Attachment) {
     bytes: input.size,
     checksum: input.checksum,
     filename: getAttachmentFilename(input),
+    headers: formatHeaderLines(input.headerLines),
     content: input.content
   }
 }
@@ -81,6 +82,10 @@ function formatParticipants(input: ParsedMail) {
     cc: addrs(input.cc).map(e => addrToRecord(e)),
     bcc: addrs(input.bcc).map(e => addrToRecord(e))
   };
+}
+
+function formatHeaderLines(input: HeaderLines) {
+  return Object.fromEntries(input.map(h => [h.key, h.line]));
 }
 
 function addrs(input?: AddressObject | AddressObject[]) {
