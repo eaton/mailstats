@@ -1,17 +1,15 @@
 import 'dotenv/config';
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { message, participant, address, attachment } from './schema';
+import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import { ParsedMail, EmailAddress, AddressObject } from 'mailparser';
 import { nanohash } from '@eatonfyi/ids';
-import * as mime from "@thi.ng/mime";
-import { getMessageId, getMessageLabels, getRecipient, getSender } from './util';
 import { canParse, parse } from '@eatonfyi/urls'
+import * as mime from "@thi.ng/mime";
+import { message, participant, address, attachment } from './schema.js';
+import { getMessageId, getMessageLabels, getRecipient, getSender } from './util.js';
 
-const sqlite = new Database(process.env.SQLITE_DB);
-const db = drizzle(sqlite);
+type DatabaseInstance = BetterSQLite3Database<Record<string, never>>;
 
-export async function insertMessage(parsed: ParsedMail) {
+export async function insertMessage(db: DatabaseInstance, parsed: ParsedMail) {
   const mid = getMessageId(parsed);
 
   await db.insert(message)
@@ -55,7 +53,9 @@ export async function insertMessage(parsed: ParsedMail) {
   await db.insert(participant)
     .values(participants)
     .onConflictDoNothing();
-  }
+
+  return Promise.resolve();
+}
 
 function addrs(input?: AddressObject | AddressObject[]) {
   if (!input) return [];
@@ -66,10 +66,11 @@ function addrs(input?: AddressObject | AddressObject[]) {
 }
 
 function addrToRecord(input: EmailAddress) {
+  const domain = canParse('mailto:' + input.address) ? parse('mailto:' + input.address).domain : undefined
   return {
     aid: nanohash(input.address ?? input.name),
     name: input.name,
     address: input.address,
-    domain: canParse('mailto:' + input.address) ? parse('mailto:' + input.address).domain : undefined
+    domain
   }
 }

@@ -1,6 +1,6 @@
 import jetpack from "@eatonfyi/fs-jetpack";
 import { ParsedMail } from "mailparser";
-import { getAttachmentFilename } from "./util";
+import { getAttachmentFilename } from "./util.js";
 
 export async function saveAttachments(parsed: ParsedMail) {
   const results: string[] = [];

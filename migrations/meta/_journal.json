@@ -22,6 +22,20 @@
       "when": 1712728026465,
       "tag": "0002_clean_tusk",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1712728927577,
+      "tag": "0003_supreme_sauron",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1712731263064,
+      "tag": "0004_square_punisher",
+      "breakpoints": true
     }
   ]
 }
