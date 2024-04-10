@@ -8,6 +8,13 @@
       "when": 1712726804147,
       "tag": "0000_flashy_psynapse",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1712727558809,
+      "tag": "0001_daffy_miracleman",
+      "breakpoints": true
     }
   ]
 }

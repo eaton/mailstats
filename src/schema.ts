@@ -39,8 +39,8 @@ export const attachment = sqliteTable('attachment', {
 });
 
 export const messagelabel = sqliteTable('messagelabel', {
-  mid: text('mid').notNull(),
-  lid: integer('lid').notNull()
+  mid: text('mid').notNull().references(() => message.mid),
+  lid: integer('lid').notNull().references(() => label.lid)
 });
 
 export const label = sqliteTable('label', {
