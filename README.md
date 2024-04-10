@@ -4,51 +4,34 @@ A terrifying, enormous wad of weirdness.
 
 ## Installation
 
-`npm i eaton/mailstats`
+In an existing node.js project, run `npm i eaton/mailstats`.
 
-## Diagrams, Yo
+## Usage
 
-```mermaid
-erDiagram
+### Node.js
 
-    MESSAGE ||--|{ PARTICIPANT : has
-    PARTICIPANT }|--|| ADDRESS : has
-    MESSAGE ||--|{ ATTACHMENT : has
+```typescript
+import { processMbox } from '@eatonfy/mailstats';
 
-    MESSAGE {
-        string mid
-        string thread
-        string subject
-        string recipient
-        string sender
-        date date
-        json embeddings
-        json meta
-        json headers
-    }
+await processMbox('~/my-mail.mbox');
+```
 
-    PARTICIPANT {
-        string mid
-        string rel
-        string aid
-    }
-    
-    ADDRESS {
-        string aid
-        string address
-        string domain
-        string name
-    }
+```typescript
+import { MboxStreamer, getDatabase, insertMessage, saveBody } from '@eatonfy/mailstats';
 
-    ATTACHMENT {
-        string attid
-        string mid
-        string mime
-        number bytes
-        string filename
-        string path
-        json embeddings
-        json meta
-    }
+const parser = new MboxStreamer();
+const db = getDatabase(':memory:');
 
+parser.on('message', m => insertMessage(m, db));
+await parser.parse('~/my-mail.mbox');
+
+// Do zany SQL stuff with `db`
+```
+
+### CLI
+
+```bash
+npm install -G eaton/mailstats
+
+mailstats ~/my-mail.mbox
 ```

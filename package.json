@@ -22,7 +22,8 @@
   ],
   "scripts": {
     "build": "pkgroll",
-    "clean": "shx rm -rf dist",
+    "run": "npm run clean && tsimp ./src/run.ts",
+    "clean": "shx rm -rf dist && shx rm -rf .tsimp",
     "prepare": "npm run clean && npm run build",
     "migrate": "drizzle-kit push:sqlite",
     "generate": "drizzle-kit generate:sqlite",
