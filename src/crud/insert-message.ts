@@ -5,11 +5,11 @@ import { nanohash } from '@eatonfyi/ids';
 import { canParse, parse } from '@eatonfyi/urls'
 import * as mime from "@thi.ng/mime";
 import { message, participant, address, attachment } from './schema.js';
-import { getMessageId, getMessageLabels, getRecipient, getSender } from './util.js';
+import { getMessageId, getMessageLabels, getRecipient, getSender } from '../util/index.js';
 
 type DatabaseInstance = BetterSQLite3Database<Record<string, never>>;
 
-export async function insertMessage(db: DatabaseInstance, parsed: ParsedMail) {
+export async function insertMessage(parsed: ParsedMail, db: DatabaseInstance) {
   const mid = getMessageId(parsed);
 
   await db.insert(message)

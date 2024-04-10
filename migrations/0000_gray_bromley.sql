@@ -1,5 +1,5 @@
 CREATE TABLE `address` (
-	`aid` text,
+	`aid` text PRIMARY KEY NOT NULL,
 	`address` text,
 	`domain` text,
 	`name` text
@@ -17,30 +17,21 @@ CREATE TABLE `attachment` (
 	`meta` text
 );
 --> statement-breakpoint
-CREATE TABLE `label` (
-	`lid` integer PRIMARY KEY NOT NULL,
-	`name` text NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE `message` (
 	`mid` text PRIMARY KEY NOT NULL,
 	`thread` text,
+	`subject` text,
+	`recipient` text,
+	`sender` text,
+	`date` text,
+	`labels` text,
 	`embeddings` text,
 	`meta` text,
 	`headers` text
 );
 --> statement-breakpoint
-CREATE TABLE `messagelabel` (
-	`mid` text NOT NULL,
-	`lid` integer NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE `participant` (
 	`mid` text,
 	`rel` text,
-	`aid` text,
-	FOREIGN KEY (`mid`) REFERENCES `message`(`mid`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`aid`) REFERENCES `address`(`aid`) ON UPDATE no action ON DELETE no action
+	`aid` text
 );
---> statement-breakpoint
-CREATE UNIQUE INDEX `label_name_unique` ON `label` (`name`);

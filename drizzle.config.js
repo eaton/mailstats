@@ -5,7 +5,7 @@ export default defineConfig({
  schema: "./src/crud/schema.ts",
   driver: 'better-sqlite',
   dbCredentials: {
-    url: process.env.SQLITE_DB ?? ':memory:'
+    url: process.env.DB_URL ?? ':memory:'
   },
   verbose: true,
   strict: true,

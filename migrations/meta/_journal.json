@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1712726804147,
-      "tag": "0000_flashy_psynapse",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1712727558809,
-      "tag": "0001_daffy_miracleman",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1712728026465,
-      "tag": "0002_clean_tusk",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1712728927577,
-      "tag": "0003_supreme_sauron",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1712731263064,
-      "tag": "0004_square_punisher",
+      "when": 1712756913653,
+      "tag": "0000_gray_bromley",
       "breakpoints": true
     }
   ]

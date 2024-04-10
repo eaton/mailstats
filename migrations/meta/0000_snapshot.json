@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "24c33213-90ed-474d-8008-a10b7c32f3a7",
+  "id": "36dbc654-9760-4801-85e5-4e72b88f29d7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "address": {
@@ -10,8 +10,8 @@
         "aid": {
           "name": "aid",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false,
+          "primaryKey": true,
+          "notNull": true,
           "autoincrement": false
         },
         "address": {
@@ -113,37 +113,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "label": {
-      "name": "label",
-      "columns": {
-        "lid": {
-          "name": "lid",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "label_name_unique": {
-          "name": "label_name_unique",
-          "columns": [
-            "name"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "message": {
       "name": "message",
       "columns": {
@@ -156,6 +125,41 @@
         },
         "thread": {
           "name": "thread",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "subject": {
+          "name": "subject",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "recipient": {
+          "name": "recipient",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "sender": {
+          "name": "sender",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "date": {
+          "name": "date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "labels": {
+          "name": "labels",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -180,29 +184,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "messagelabel": {
-      "name": "messagelabel",
-      "columns": {
-        "mid": {
-          "name": "mid",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "lid": {
-          "name": "lid",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
           "autoincrement": false
         }
       },
@@ -237,34 +218,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "participant_mid_message_mid_fk": {
-          "name": "participant_mid_message_mid_fk",
-          "tableFrom": "participant",
-          "tableTo": "message",
-          "columnsFrom": [
-            "mid"
-          ],
-          "columnsTo": [
-            "mid"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "participant_aid_address_aid_fk": {
-          "name": "participant_aid_address_aid_fk",
-          "tableFrom": "participant",
-          "tableTo": "address",
-          "columnsFrom": [
-            "aid"
-          ],
-          "columnsTo": [
-            "aid"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }
