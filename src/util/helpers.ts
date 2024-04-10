@@ -34,7 +34,10 @@ export function getMessageId(input: ParsedMail) {
  * the field.
  */
 export function getSender(input: ParsedMail) {
-  return input.from?.value[0]?.address;
+  const val = input.headers.get('from');
+  if (isAddressObject(val)) {
+    return val.value[0]?.address ?? val.value[0]?.name;
+  }
 }
 
 /**
@@ -43,7 +46,7 @@ export function getSender(input: ParsedMail) {
  * listed in the `To:` field of the message.
  */
 export function getRecipient(input: ParsedMail) {
-  const val = input.headers.get('delivered-to');
+  const val = input.headers.get('delivered-to') ?? input.headers.get('to');
   if (isAddressObject(val)) {
     return val.value[0]?.address ?? val.value[0]?.name;
   }
