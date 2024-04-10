@@ -1,20 +1,18 @@
 import jetpack from "@eatonfyi/fs-jetpack";
-import { ParsedMail } from "mailparser";
-import { getMessageId } from "./message-parsing.js";
+import { MboxMessage } from "./format-message.js";
 
-export async function saveBody(parsed: ParsedMail, directory: string): Promise<string[]> {
-  const mid = getMessageId(parsed);
+export async function saveBody(input: MboxMessage, directory: string): Promise<string[]> {
   const results: string[] = [];
 
   const messages = jetpack.dir(directory);
 
-  if (parsed.html) {
-    results.push(messages.path(`${mid}.html`));
-    messages.write(`${mid}.html`, parsed.html);
+  if (input.html) {
+    results.push(messages.path(`${input.mid}.html`));
+    messages.write(`${input.mid}.html`, input.html);
   }
-  if (parsed.text) {
-    results.push(messages.path(`${mid}.txt`));
-    messages.write(`${mid}.txt`, parsed.text);
+  if (input.text) {
+    results.push(messages.path(`${input.mid}.txt`));
+    messages.write(`${input.mid}.txt`, input.text);
   }
   return Promise.resolve(results);
 }

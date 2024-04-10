@@ -1,51 +1,48 @@
 import 'dotenv/config';
-import { ParsedMail, EmailAddress, AddressObject } from 'mailparser';
-import { nanohash } from '@eatonfyi/ids';
-import { canParse, parse } from '@eatonfyi/urls'
-import * as mime from "@thi.ng/mime";
 import { message, participant, address, attachment } from './schema.js';
-import { getMessageId, getMessageLabels, getRecipient, getSender } from '../util/index.js';
 import { DatabaseInstance } from './get-database.js';
+import { MboxMessage } from '../util/index.js';
 
-export async function insertMessage(parsed: ParsedMail, db: DatabaseInstance) {
-  const mid = getMessageId(parsed);
+export async function insertMessage(input: MboxMessage, db: DatabaseInstance) {
 
   await db.insert(message)
     .values({
-      mid,
-      subject: parsed.subject,
-      sender: getSender(parsed),
-      recipient: getRecipient(parsed),
-      date: parsed.date?.toISOString(),
-      labels: getMessageLabels(parsed)
+      mid: input.mid,
+      subject: input.subject,
+      sender: input.sender,
+      recipient: input.recipient,
+      date: input.date?.toISOString(),
+      labels: input.labels,
+      headers: input.headers,
+      meta: input.meta,
+      embeddings: input.embeddings,
     }).onConflictDoNothing();
 
-  if (parsed.attachments.length) {
+  if (input.attachments.length) {
     await db.insert(attachment)
-      .values(parsed.attachments.map(a => ({
-        mid,
-        cid: a.contentId ?? nanohash(a.checksum),
+      .values(input.attachments.map(a => ({
+        mid: input.mid,
+        cid: a.cid,
         contentType: a.contentType,
-        bytes: a.size,
+        bytes: a.bytes,
         checksum: a.checksum,
-        filename:  a.filename ?? `${a.cid}.${mime.preferredExtension(a.contentType)}`
+        filename: a.filename,
+        headers: a.headers,
+        meta: a.meta,
+        embeddings: a.embeddings
       }))).onConflictDoNothing();
     }
-
-  const allInvolved = {
-    from: addrs(parsed.from).map(e => addrToRecord(e)),
-    to: addrs(parsed.to).map(e => addrToRecord(e)),
-    cc: addrs(parsed.cc).map(e => addrToRecord(e)),
-    bcc: addrs(parsed.bcc).map(e => addrToRecord(e))
-  };
   
   await db.insert(address)
-    .values(Object.values(allInvolved).flat())
+    .values(Object.values(input.participants).flat())
     .onConflictDoNothing();
   
-
-  const participants = Object.entries(allInvolved).flatMap(([rel, list]) => {
-    return list.map(email => ({ mid, rel, aid: email.aid }));
+  const participants = Object.entries(input.participants).flatMap(([rel, list]) => {
+    return list.map(email => ({
+      mid: input.mid,
+      rel,
+      aid: email.aid
+    }));
   });
 
   await db.insert(participant)
@@ -53,22 +50,4 @@ export async function insertMessage(parsed: ParsedMail, db: DatabaseInstance) {
     .onConflictDoNothing();
 
   return Promise.resolve();
-}
-
-function addrs(input?: AddressObject | AddressObject[]) {
-  if (!input) return [];
-  if (Array.isArray(input)) {
-    return input.flatMap(a => a.value);
-  }
-  return input.value;
-}
-
-function addrToRecord(input: EmailAddress) {
-  const domain = canParse('mailto:' + input.address) ? parse('mailto:' + input.address).domain : undefined
-  return {
-    aid: nanohash(input.address ?? input.name),
-    name: input.name,
-    address: input.address,
-    domain
-  }
 }
