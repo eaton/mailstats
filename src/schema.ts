@@ -8,6 +8,7 @@ export const message = sqliteTable('message', {
   recipient: text('thread'),
   sender: text('thread'),
   date: text('thread'),
+  labels: text('labels', { mode: 'json' }).$type<string[]>(),
   embeddings: text('embeddings', { mode: 'json' }).$type<Record<string, number[]>>(),
   meta: text('meta', { mode: 'json' }).$type<Record<string, unknown>>(),
   headers: text('headers', { mode: 'json' }).$type<Record<string, unknown>>(),
@@ -36,14 +37,4 @@ export const attachment = sqliteTable('attachment', {
   headers: text('headers', { mode: 'json' }).$type<Record<string, unknown>>(),
   embeddings: text('embeddings', { mode: 'json' }).$type<Record<string, number[]>>(),
   meta: text('meta', { mode: 'json' }).$type<Record<string, unknown>>(),
-});
-
-export const messagelabel = sqliteTable('messagelabel', {
-  mid: text('mid').notNull().references(() => message.mid),
-  lid: integer('lid').notNull().references(() => label.lid)
-});
-
-export const label = sqliteTable('label', {
-  lid: integer('lid').primaryKey(),
-  name: text('name').notNull().unique()
 });

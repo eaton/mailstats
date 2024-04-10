@@ -11,7 +11,8 @@ export function getAttachmentId(input: Attachment) {
 }
 
 export function getMessageId(input: ParsedMail) {
-  return input.messageId ?? nanohash(input.headers);
+  // return input.messageId ?? nanohash(input.headers);
+  return nanohash(input.headers);
 }
 
 export function getSender(input: ParsedMail) {
@@ -23,6 +24,10 @@ export function getRecipient(input: ParsedMail) {
   if (isEmailAddress(val)) {
     return val.address ?? val.name;
   }
+}
+
+export function getMessageLabels(input: ParsedMail) {
+  return undefined;
 }
 
 export function isEmailAddress(input: unknown): input is EmailAddress {

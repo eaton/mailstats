@@ -15,6 +15,13 @@
       "when": 1712727558809,
       "tag": "0001_daffy_miracleman",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1712728026465,
+      "tag": "0002_clean_tusk",
+      "breakpoints": true
     }
   ]
 }
