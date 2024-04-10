@@ -1,12 +1,12 @@
 import test from 'ava';
 import jetpack from '@eatonfyi/fs-jetpack';
-import { processMbox } from "../src/process-mbox.js";
+import { importMbox } from "../src/import.js";
 
 const dir = jetpack.dir('./test/process');
 
 test('process example mailbox', async t => {
   dir.remove();
-  await processMbox(jetpack.path('./test/example.mbox'), { output: dir.path() });
+  await importMbox(jetpack.path('./test/example.mbox'), { output: dir.path() });
 
   t.assert(dir.exists('mailstats.db'));
 

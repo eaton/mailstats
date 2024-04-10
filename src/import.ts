@@ -3,7 +3,7 @@ import { sqlite } from "./index.js";
 import { formatMessage, saveAttachments, saveBody } from "./util/index.js";
 import { Options, populateSettings } from './settings.js';
 
-export async function processMbox(mailbox: string, opt: Options = {}) {
+export async function importMbox(mailbox: string, opt: Options = {}) {
   const options = populateSettings(opt);
 
   const db = sqlite.getDatabase(options.db);

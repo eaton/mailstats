@@ -1,4 +1,4 @@
-import { AddressObject, Attachment, AttachmentCommon, EmailAddress, ParsedMail } from "mailparser";
+import { AddressObject, Attachment, EmailAddress, ParsedMail } from "mailparser";
 
 import { canParse, parse } from "@eatonfyi/urls";
 import { nanohash } from "@eatonfyi/ids";
