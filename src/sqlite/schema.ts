@@ -48,8 +48,8 @@ export const address = sqliteTable('address', {
  * analysis is easier. 
  */
 export const attachment = sqliteTable('attachment', {
+  cid: text('cid').primaryKey(),
   mid: text('mid'),
-  cid: text('cid'),
   contentType: text('contentType'),
   bytes: integer('bytes'),
   filename: text('filename'),

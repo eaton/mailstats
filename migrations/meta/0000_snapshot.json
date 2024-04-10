@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "36dbc654-9760-4801-85e5-4e72b88f29d7",
+  "id": "a4645c50-d961-43ee-976f-512dd8e9ce4b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "address": {
@@ -44,15 +44,15 @@
     "attachment": {
       "name": "attachment",
       "columns": {
-        "mid": {
-          "name": "mid",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "cid": {
           "name": "cid",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "mid": {
+          "name": "mid",
           "type": "text",
           "primaryKey": false,
           "notNull": false,

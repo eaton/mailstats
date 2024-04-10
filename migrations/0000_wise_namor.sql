@@ -6,8 +6,8 @@ CREATE TABLE `address` (
 );
 --> statement-breakpoint
 CREATE TABLE `attachment` (
+	`cid` text PRIMARY KEY NOT NULL,
 	`mid` text,
-	`cid` text,
 	`contentType` text,
 	`bytes` integer,
 	`filename` text,
