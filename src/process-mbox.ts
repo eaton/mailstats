@@ -1,5 +1,5 @@
 import { MboxStreamer } from "@eatonfyi/mbox-streamer";
-import { getDatabase, insertMessage } from "./crud/index.js";
+import { getDatabase, insertMessage } from "./sqlite/index.js";
 import { saveAttachments, saveBody } from "./util/index.js";
 import { Options, populateSettings } from './settings.js';
 

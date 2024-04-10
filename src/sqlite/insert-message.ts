@@ -1,13 +1,11 @@
 import 'dotenv/config';
-import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import { ParsedMail, EmailAddress, AddressObject } from 'mailparser';
 import { nanohash } from '@eatonfyi/ids';
 import { canParse, parse } from '@eatonfyi/urls'
 import * as mime from "@thi.ng/mime";
 import { message, participant, address, attachment } from './schema.js';
 import { getMessageId, getMessageLabels, getRecipient, getSender } from '../util/index.js';
-
-type DatabaseInstance = BetterSQLite3Database<Record<string, never>>;
+import { DatabaseInstance } from './get-database.js';
 
 export async function insertMessage(parsed: ParsedMail, db: DatabaseInstance) {
   const mid = getMessageId(parsed);

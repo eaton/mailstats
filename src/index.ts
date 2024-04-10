@@ -1,4 +1,4 @@
-export * from './crud/index.js';
+export * from './sqlite/index.js';
 export * from './util/index.js';
 export * from './process-mbox.js';
 export * from './settings.js';
