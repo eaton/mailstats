@@ -12,7 +12,7 @@ export async function importMbox(mailbox: string, opt: Options = {}) {
   parser.on('message', input => {
     const m = formatMessage(input);
     sqlite.insertMessage(m, db);
-    if (options.attachments !== false) saveAttachments(m, options.attachments);
+    if (options.attachments !== false) saveAttachments(m.attachments, options.attachments);
     if (options.messages !== false) saveBody(m, options.messages);
   });
 
