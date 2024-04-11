@@ -1,6 +1,10 @@
 # Mailstats
 
-A terrifying, enormous wad of weirdness.
+Ingest, anaylze, and noodle around with huge piles of email.
+
+Mailstats parses and extracts (potentially) useful information from UNIX Mbox mail archives. It uses a streaming parser so multi-gigabyte mailboxes can be processed with minimal overhead, and tosses each message into a queue for processing.
+
+By default, it will create a sqlite database to store email metadata (subjects, dates, senders, recipients, etc) and a folder on disk to store each messages' text body, html body, and attachments.
 
 ## Installation
 
@@ -8,24 +12,36 @@ In an existing node.js project, run `npm i eaton/mailstats`.
 
 ## Usage
 
-### Node.js
+### Basic mailbox ingestion
 
 ```typescript
-import { MboxStreamer, getDatabase, insertMessage, formatMessage, saveAttachment } from '@eatonfy/mailstats';
+import { ingest } from "@eatonfyi/mailstats";
 
-const parser = new MboxStreamer();
-const db = getDatabase(':memory:');
+// Default options
+const options = {
+  output: './output',
+  db: 'mailstats.db',
+  saveHeaders: true,
+  saveAttachments: true,
+  saveText: true,
+  saveHtml: true
+  showProgress: true,
+};
 
-parser.on('message', async raw => {
-  const message = formatMessage(raw);
-  const pdfs = message.attachments.filter(a => a.contentType === 'application/pdf');
+await ingest("./test/example.mbox", options);
+```
 
-  if (pdfs.length) {
-    await insertMessage(message, db);
-    await saveAttachments(pdfs, 'received-files');
-  }
+### Custom processing functions
+
+```typescript
+import { buildQueue, MboxQueueTask, MboxMessage } from '@eatonfyi/mailstats';
+
+const task: MboxQueueTask = (message: MboxMessage) => {
+  console.log(message.subject);
+  return Promise.all([
+    yourCustomFunction(message),
+    yourCustomIndexer(message.messageId, message.text),
+  ]);
 });
-
-await parser.parse('~/my-mail.mbox');
-// Run queries! Amaze your friends!
+await buildQueue("./test/example.mbox", task).start();
 ```

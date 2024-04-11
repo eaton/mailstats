@@ -7,7 +7,7 @@ export type MboxQueueStatus = {
   messagesRead: number,
 };
 
-export type MboxQueueTask = (input: MboxMessage, status: MboxQueueStatus) => Promise<unknown>;
+export type MboxQueueTask = (input: MboxMessage, messageBytes: number, status: MboxQueueStatus) => Promise<unknown>;
 
 export function buildQueue(mailbox: string, func: MboxQueueTask): PQueue  {
   const parser = new MboxStreamer();
@@ -20,10 +20,10 @@ export function buildQueue(mailbox: string, func: MboxQueueTask): PQueue  {
 
   q.add(() => parser.parse(mailbox));
 
-  parser.on('message', (input, total, bytes) => {
+  parser.on('message', (input, total, msgBytes, totalBytes) => {
     status.messagesRead = total;
-    status.bytesRead = bytes;
-    q.add(() => func(formatMessage(input), status));
+    status.bytesRead = totalBytes;
+    q.add(() => func(formatMessage(input), msgBytes, status));
   });
   
   return q;

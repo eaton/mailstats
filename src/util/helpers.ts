@@ -9,7 +9,7 @@ import { canParse, parse } from "@eatonfyi/urls";
  * its mime-type if not.
  */
 export function getAttachmentFilename(input: Attachment) {
-  return input.filename ?? [getAttachmentId(input), mime.preferredExtension(input.contentType)].join('.')
+  return input.filename ?? [getAttachmentId(input),  !!input.contentType ? mime.preferredExtension(input.contentType) : 'bin'].join('.')
 }
 
 /**
@@ -37,9 +37,13 @@ export function getMessageId(input: ParsedMail) {
 export function getSender(input: ParsedMail) {
   const val = input.headers.get('from');
   if (isAddressObject(val)) {
-    const email = formatEmailAddress(val.value[0])
-    const sender = email.address || email.name
-    return sender.trim().length ? sender : undefined
+    if (val.value.length) {
+      const email = formatEmailAddress(val.value[0])
+      const sender = email.address || email.name
+      return sender.trim().length ? sender : undefined
+    } else {
+      return val.text.trim().length ? val.text : undefined;
+    }
   }
 }
 
@@ -51,9 +55,13 @@ export function getSender(input: ParsedMail) {
 export function getRecipient(input: ParsedMail) {
   const val = input.headers.get('delivered-to') ?? input.headers.get('to');
   if (isAddressObject(val)) {
-    const email = formatEmailAddress(val.value[0])
-    const recipient = email.address || email.name
-    return recipient.trim().length ? recipient : undefined
+    if (val.value.length) {
+      const email = formatEmailAddress(val.value[0])
+      const recipient = email.address || email.name
+      return recipient.trim().length ? recipient : undefined
+    } else {
+      return val.text.trim().length ? val.text : undefined;
+    }
   }
 }
 

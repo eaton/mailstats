@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "build": "pkgroll",
-    "demo": "npm run clean && tsimp ./src/demo.ts",
+    "demo": "npm run clean && node --import=tsimp/import --max-old-space-size=65536  ./src/demo.ts",
     "clean": "shx rm -rf dist && shx rm -rf .tsimp",
     "prepare": "npm run clean && npm run build",
     "migrate": "drizzle-kit push:sqlite",
@@ -51,6 +51,7 @@
   "dependencies": {
     "@eatonfyi/fs-jetpack": "github:eaton/fs-jetpack",
     "@eatonfyi/ids": "github:eaton/ids",
+    "@eatonfyi/mailstats": "github:eaton/mailstats",
     "@eatonfyi/mbox-streamer": "github:eaton/mbox-streamer",
     "@eatonfyi/urls": "github:eaton/urls",
     "@thi.ng/mime": "^2.6.4",
@@ -61,6 +62,7 @@
     "cli-progress": "^3.12.0",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.7",
+    "filesize": "^10.1.1",
     "mailparser": "^3.6.9",
     "p-queue": "^8.0.1"
   }

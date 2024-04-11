@@ -5,7 +5,9 @@ import { MboxMessage } from '../util/index.js';
 
 export async function insertMessage(input: MboxMessage, db: DatabaseInstance) {
 
-  await db.insert(message)
+  const promises: Promise<unknown>[] = [];
+
+  promises.push(db.insert(message)
     .values({
       mid: input.mid,
       subject: input.subject,
@@ -16,10 +18,10 @@ export async function insertMessage(input: MboxMessage, db: DatabaseInstance) {
       headers: input.headers,
       meta: input.meta,
       embeddings: input.embeddings,
-    }).onConflictDoNothing();
+    }).onConflictDoNothing().then(() => {}));
 
   if (input.attachments.length) {
-    await db.insert(attachment)
+    promises.push(db.insert(attachment)
       .values(input.attachments.map(a => ({
         mid: input.mid,
         cid: a.cid,
@@ -30,12 +32,12 @@ export async function insertMessage(input: MboxMessage, db: DatabaseInstance) {
         headers: a.headers,
         meta: a.meta,
         embeddings: a.embeddings
-      }))).onConflictDoNothing();
-    }
+      }))).onConflictDoNothing().then(() => {}));
+  }
   
-  await db.insert(address)
+  promises.push(db.insert(address)
     .values(Object.values(input.participants).flat())
-    .onConflictDoNothing();
+    .onConflictDoNothing().then(() => {}));
   
   const participants = Object.entries(input.participants).flatMap(([rel, list]) => {
     return list.map(email => ({
@@ -45,9 +47,9 @@ export async function insertMessage(input: MboxMessage, db: DatabaseInstance) {
     }));
   });
 
-  await db.insert(participant)
+  promises.push(db.insert(participant)
     .values(participants)
-    .onConflictDoNothing();
+    .onConflictDoNothing().then(() => {}));
 
-  return Promise.resolve();
+  return Promise.all(promises);
 }
