@@ -1,9 +1,6 @@
-import { AddressObject, Attachment, EmailAddress, ParsedMail, Headers, HeaderValue, StructuredHeader, HeaderLines } from "mailparser";
+import { AddressObject, Attachment, ParsedMail, Headers, HeaderValue, StructuredHeader, HeaderLines } from "mailparser";
 
-import { canParse, parse } from "@eatonfyi/urls";
-import { nanohash } from "@eatonfyi/ids";
-
-import { getAttachmentFilename, getAttachmentId, getMessageId, getMessageLabels, getRecipient, getSender } from './helpers.js';
+import { formatEmailAddress, getAttachmentFilename, getAttachmentId, getMessageId, getMessageLabels, getRecipient, getSender } from './helpers.js';
 
 export type MboxMessage = {
   mid: string,
@@ -77,15 +74,15 @@ function formatAttachment(mid: string, input: Attachment) {
 
 function formatParticipants(input: ParsedMail) {
   return {
-    from: addrs(input.from).map(e => addrToRecord(e)),
-    to: addrs(input.to).map(e => addrToRecord(e)),
-    cc: addrs(input.cc).map(e => addrToRecord(e)),
-    bcc: addrs(input.bcc).map(e => addrToRecord(e))
+    from: addrs(input.from).map(e => formatEmailAddress(e)),
+    to: addrs(input.to).map(e => formatEmailAddress(e)),
+    cc: addrs(input.cc).map(e => formatEmailAddress(e)),
+    bcc: addrs(input.bcc).map(e => formatEmailAddress(e))
   };
 }
 
 function formatHeaderLines(input: HeaderLines) {
-  return Object.fromEntries(input.map(h => [h.key, h.line]));
+  return Object.fromEntries([...input ?? []].map(h => [h.key, h.line]));
 }
 
 function addrs(input?: AddressObject | AddressObject[]) {
@@ -94,14 +91,4 @@ function addrs(input?: AddressObject | AddressObject[]) {
     return input.flatMap(a => a.value);
   }
   return input.value;
-}
-
-function addrToRecord(input: EmailAddress) {
-  const domain = canParse('mailto:' + input.address) ? parse('mailto:' + input.address).domain : undefined
-  return {
-    aid: nanohash(input.address ?? input.name),
-    name: input.name,
-    address: input.address,
-    domain
-  }
 }

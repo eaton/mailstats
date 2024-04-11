@@ -1,6 +1,7 @@
 import * as mime from "@thi.ng/mime";
 import { nanohash } from "@eatonfyi/ids";
 import { ParsedMail, Attachment, EmailAddress, AddressObject } from "mailparser";
+import { canParse, parse } from "@eatonfyi/urls";
 
 /**
  * Generates a filename for an attachment, rexpecting the one that was specified
@@ -36,7 +37,9 @@ export function getMessageId(input: ParsedMail) {
 export function getSender(input: ParsedMail) {
   const val = input.headers.get('from');
   if (isAddressObject(val)) {
-    return val.value[0]?.address ?? val.value[0]?.name;
+    const email = formatEmailAddress(val.value[0])
+    const sender = email.address || email.name
+    return sender.trim().length ? sender : undefined
   }
 }
 
@@ -48,7 +51,9 @@ export function getSender(input: ParsedMail) {
 export function getRecipient(input: ParsedMail) {
   const val = input.headers.get('delivered-to') ?? input.headers.get('to');
   if (isAddressObject(val)) {
-    return val.value[0]?.address ?? val.value[0]?.name;
+    const email = formatEmailAddress(val.value[0])
+    const recipient = email.address || email.name
+    return recipient.trim().length ? recipient : undefined
   }
 }
 
@@ -62,6 +67,18 @@ export function getMessageLabels(input: ParsedMail) {
     return labels.toString().split(',').map(l => l.trim());
   }
   return undefined;
+}
+
+export function formatEmailAddress(input: EmailAddress) {
+  const address = input.address?.replace(/^['"]/, '').replace(/['"]$/, '');
+  const name = input.name?.replace(/^['"]/, '').replace(/['"]$/, '');
+  const domain = canParse('mailto:' + address) ? parse('mailto:' + address).domain : undefined
+  return {
+    aid: nanohash(address ?? name),
+    name,
+    address,
+    domain
+  }
 }
 
 /**

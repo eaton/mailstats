@@ -13,7 +13,7 @@ export async function insertMessage(input: MboxMessage, db: DatabaseInstance) {
       recipient: input.recipient,
       date: input.date?.toISOString(),
       labels: input.labels,
-      headers: input.headers,
+      // headers: input.headers,
       meta: input.meta,
       embeddings: input.embeddings,
     }).onConflictDoNothing();
