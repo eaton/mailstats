@@ -39,8 +39,8 @@ export function getSender(input: ParsedMail) {
   if (isAddressObject(val)) {
     if (val.value.length) {
       const email = formatEmailAddress(val.value[0])
-      const sender = email.address || email.name
-      return sender.trim().length ? sender : undefined
+      const sender = email.address || email.name;
+      return sender?.trim().length ? sender : undefined
     } else {
       return val.text.trim().length ? val.text : undefined;
     }
@@ -58,7 +58,7 @@ export function getRecipient(input: ParsedMail) {
     if (val.value.length) {
       const email = formatEmailAddress(val.value[0])
       const recipient = email.address || email.name
-      return recipient.trim().length ? recipient : undefined
+      return recipient?.trim().length ? recipient : undefined
     } else {
       return val.text.trim().length ? val.text : undefined;
     }
@@ -78,9 +78,14 @@ export function getMessageLabels(input: ParsedMail) {
 }
 
 export function formatEmailAddress(input: EmailAddress) {
-  const address = input.address?.replace(/^['"]/, '').replace(/['"]$/, '');
-  const name = input.name?.replace(/^['"]/, '').replace(/['"]$/, '');
-  const domain = canParse('mailto:' + address) ? parse('mailto:' + address).domain : undefined
+  let address = input.address?.replace(/^['"]/, '').replace(/['"]$/, '').trim().toLocaleLowerCase();
+  let name = input.name?.replace(/^['"]/, '').replace(/['"]$/, '').trim();
+
+  if ((address || (address?.trim().length === 0)) && canParse(name)) {
+    address = name;
+  }
+
+  const domain = canParse('mailto:' + address) ? parse('mailto:' + address).domain.toLocaleLowerCase() : undefined
   return {
     aid: nanohash(address ?? name),
     name,

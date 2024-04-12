@@ -20,8 +20,6 @@ erDiagram
         string recipient
         string sender
         date date
-        json labels
-        json embeddings
         json meta
         json headers
     }
@@ -47,7 +45,6 @@ erDiagram
         string filename
         string checksum
         json headers
-        json embeddings
         json meta
     }
 

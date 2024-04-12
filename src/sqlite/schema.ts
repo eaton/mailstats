@@ -13,10 +13,8 @@ export const message = sqliteTable('message', {
   recipient: text('recipient'),
   sender: text('sender'),
   date: text('date'),
-  labels: text('labels', { mode: 'json' }).$type<string[]>(),
-  embeddings: text('embeddings', { mode: 'json' }).$type<Record<string, number[]>>(),
-  meta: text('meta', { mode: 'json' }).$type<Record<string, unknown>>(),
   headers: text('headers', { mode: 'json' }).$type<Record<string, unknown>>(),
+  meta: text('meta', { mode: 'json' }).$type<Record<string, unknown>>(),
 });
 
 /**
@@ -40,6 +38,7 @@ export const address = sqliteTable('address', {
   address: text('address'),
   domain: text('domain'),
   name: text('name'),
+  meta: text('meta', { mode: 'json' }).$type<Record<string, unknown>>(),
 });
 
 /**
@@ -55,6 +54,5 @@ export const attachment = sqliteTable('attachment', {
   filename: text('filename'),
   checksum: text('checksum'),
   headers: text('headers', { mode: 'json' }).$type<Record<string, unknown>>(),
-  embeddings: text('embeddings', { mode: 'json' }).$type<Record<string, number[]>>(),
   meta: text('meta', { mode: 'json' }).$type<Record<string, unknown>>(),
 });

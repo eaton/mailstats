@@ -2,7 +2,8 @@ CREATE TABLE `address` (
 	`aid` text PRIMARY KEY NOT NULL,
 	`address` text,
 	`domain` text,
-	`name` text
+	`name` text,
+	`meta` text
 );
 --> statement-breakpoint
 CREATE TABLE `attachment` (
@@ -13,7 +14,6 @@ CREATE TABLE `attachment` (
 	`filename` text,
 	`checksum` text,
 	`headers` text,
-	`embeddings` text,
 	`meta` text
 );
 --> statement-breakpoint
@@ -24,10 +24,8 @@ CREATE TABLE `message` (
 	`recipient` text,
 	`sender` text,
 	`date` text,
-	`labels` text,
-	`embeddings` text,
-	`meta` text,
-	`headers` text
+	`headers` text,
+	`meta` text
 );
 --> statement-breakpoint
 CREATE TABLE `participant` (

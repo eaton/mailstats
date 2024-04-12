@@ -8,7 +8,6 @@ export type MboxMessage = {
   sender?: string,
   recipient?: string,
   date?: Date,
-  labels?: string[],
   headers?: Record<string, unknown>,
   text?: string,
   html?: string,
@@ -35,7 +34,8 @@ export type MboxAddress = {
   aid: string,
   name: string,
   address?: string,
-  domain?: string
+  domain?: string,
+  meta?: Record<string, unknown>
 };
 
 export function formatMessage(input: ParsedMail): MboxMessage {
@@ -46,12 +46,10 @@ export function formatMessage(input: ParsedMail): MboxMessage {
     sender: getSender(input),
     recipient: getRecipient(input),
     date: input.date,
-    labels: getMessageLabels(input),
     headers: formatHeaderLines(input.headerLines),
     text: input.text,
     html: input.html || undefined,
-    meta: undefined,
-    embeddings: undefined,
+    meta: { labels: getMessageLabels(input) },
     participants: formatParticipants(input),
     attachments: input.attachments.map(a => formatAttachment(mid, a)),
   };

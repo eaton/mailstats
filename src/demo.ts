@@ -13,4 +13,10 @@ const paths = [
   "/Volumes/Syntax/mailboxes/input/eaton@lullabot.mbox",
 ];
 
-await sqlite.ingest("/Volumes/Syntax/mailboxes/input/eaton@lullabot.mbox", { output: "/Volumes/Syntax/mailboxes/", saveHtml: false });
+await sqlite.ingest(paths, {
+  output: "/Volumes/Syntax/mailboxes/",
+  saveHtml: false,
+  saveText: false,
+  saveAttachments:
+  false, saveHeaders: false
+});

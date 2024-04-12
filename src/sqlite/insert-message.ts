@@ -14,10 +14,8 @@ export async function insertMessage(input: MboxMessage, db: DatabaseInstance) {
       sender: input.sender,
       recipient: input.recipient,
       date: input.date?.toISOString(),
-      labels: input.labels,
       headers: input.headers,
       meta: input.meta,
-      embeddings: input.embeddings,
     }).onConflictDoNothing().then(() => {}));
 
   if (input.attachments.length) {
@@ -31,7 +29,6 @@ export async function insertMessage(input: MboxMessage, db: DatabaseInstance) {
         filename: a.filename,
         headers: a.headers,
         meta: a.meta,
-        embeddings: a.embeddings
       }))).onConflictDoNothing().then(() => {}));
   }
   
