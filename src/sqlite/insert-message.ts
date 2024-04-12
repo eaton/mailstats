@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { message, participant, address, attachment } from './schema.js';
 import { DatabaseInstance } from './get-database.js';
-import { MboxMessage } from '../util/index.js';
+import { MboxMessage } from '../types.js';
 
 export async function insertMessage(input: MboxMessage, db: DatabaseInstance) {
 
@@ -11,10 +11,13 @@ export async function insertMessage(input: MboxMessage, db: DatabaseInstance) {
     .values({
       mid: input.mid,
       subject: input.subject,
+      messageId: input.messageId,
+      inReplyTo: input.inReplyTo,
       sender: input.sender,
       recipient: input.recipient,
       date: input.date?.toISOString(),
       headers: input.headers,
+      labels: input.labels,
       meta: input.meta,
     }).onConflictDoNothing().then(() => {}));
 
@@ -27,8 +30,6 @@ export async function insertMessage(input: MboxMessage, db: DatabaseInstance) {
         bytes: a.bytes,
         checksum: a.checksum,
         filename: a.filename,
-        headers: a.headers,
-        meta: a.meta,
       }))).onConflictDoNothing().then(() => {}));
   }
   

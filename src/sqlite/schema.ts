@@ -8,12 +8,16 @@ import { text, integer, sqliteTable } from "drizzle-orm/sqlite-core";
  */
 export const message = sqliteTable('message', {
   mid: text('mid').primaryKey(),
-  thread: text('thread'),
-  subject: text('subject'),
-  recipient: text('recipient'),
-  sender: text('sender'),
+  messageId: text('messageId'),
+  inReplyTo: text('inReplyTo'),
   date: text('date'),
+  subject: text('subject'),
+  sender: text('sender'),
+  recipient: text('recipient'),
+  text: text('text'),
+  html: text('html'),
   headers: text('headers', { mode: 'json' }).$type<Record<string, unknown>>(),
+  labels: text('labels', { mode: 'json' }).$type<string[]>(),
   meta: text('meta', { mode: 'json' }).$type<Record<string, unknown>>(),
 });
 
@@ -36,9 +40,9 @@ export const participant = sqliteTable('participant', {
 export const address = sqliteTable('address', {
   aid: text('aid').primaryKey(),
   address: text('address'),
-  domain: text('domain'),
   name: text('name'),
-  meta: text('meta', { mode: 'json' }).$type<Record<string, unknown>>(),
+  domain: text('domain'),
+  labels: text('labels', { mode: 'json' }).$type<string[]>(),
 });
 
 /**
@@ -53,6 +57,4 @@ export const attachment = sqliteTable('attachment', {
   bytes: integer('bytes'),
   filename: text('filename'),
   checksum: text('checksum'),
-  headers: text('headers', { mode: 'json' }).$type<Record<string, unknown>>(),
-  meta: text('meta', { mode: 'json' }).$type<Record<string, unknown>>(),
 });

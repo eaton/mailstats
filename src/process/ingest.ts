@@ -1,13 +1,16 @@
-import { SingleBar, Presets, MultiBar, ValueFormatter, ValueType, Params as ProgressParams, Options as ProgressOptions } from 'cli-progress';
-import { getDatabase, DatabaseInstance } from './get-database.js';
-import { insertMessage } from './insert-message.js';
-import { saveAttachments, saveHtml, saveText } from "../util/index.js";
-import { Options, populateSettings } from '../settings.js';
+import { SingleBar, MultiBar, ValueType, Options as ProgressOptions } from 'cli-progress';
+import { getDatabase, DatabaseInstance } from '../sqlite/get-database.js';
+import { insertMessage } from '../sqlite/insert-message.js';
+import { saveAttachments, saveHeaders, saveHtml, saveText } from "../util/index.js";
+import { Options, populateSettings } from './settings.js';
 import { buildQueue } from '../build-queue.js';
 import PQueue from 'p-queue';
 import jetpack from '@eatonfyi/fs-jetpack';
 import { filesize } from 'filesize';
 import { formatDistance } from '@eatonfyi/dates';
+import { NLP } from '../util/process-text.js';
+import { prepareMessage } from './prepare-message.js';
+import { labelAddresses } from '../util/label-addresses.js';
 
 /**
  * Read one or more UNIX MBox files and process each of the messages.
@@ -54,22 +57,41 @@ export async function ingest(mailbox: string | string[], opt: Options = {}) {
 }
 
 async function processSingleMailbox(path: string, options: Required<Options>, db?: DatabaseInstance,  bar?: SingleBar, bytesBar?: SingleBar): Promise<void> {
+  const nlp = options.analyzeText ? new NLP() : false;
+
   const queue = buildQueue(path, async (input, bytes, status) => {
     bar?.setTotal(status.messagesRead);
     const promises: Promise<unknown>[] = [];
-    
-    if (!options.saveHeaders) input.headers = undefined;
 
-    if (db) promises.push(
-      insertMessage(input, db).then(() => {})
-        .catch((err: unknown) => dumpError(err, input, input.mid, options.output))
-    );
+    if (Object.keys(options.addresses).length) {
+      labelAddresses(input, options.addresses);
+    }
+
+    if (nlp && input.text && input.text.trim().length) {
+      const raw = nlp.getWords(input.text);
+      const original = nlp.getWords(nlp.stripQuotedLines(input.text));
+      const words = {
+        total: raw.length,
+        original: original.length,
+        quoted: raw.length - original.length,
+        sentiment: nlp.sentiment.getSentiment(original)
+      }
+      input.meta['words'] = words;
+    }
+
     if (options.saveAttachments) promises.push(
-      saveAttachments(input.attachments, options.output)
+      saveAttachments(input, options.output)
         .catch((err: unknown) => dumpError(err, input, input.mid + '+a', options.output))
     );
-    if (options.saveText) promises.push(saveText(input, options.output));
-    if (options.saveHtml) promises.push(saveHtml(input, options.output));
+
+    if (options.saveText === 'disk') promises.push(saveText(input, options.output));
+    if (options.saveHtml === 'disk') promises.push(saveHtml(input, options.output));
+    if (options.saveHeaders === 'disk') promises.push(saveHeaders(input, options.output));
+
+    if (db) promises.push(
+      insertMessage(prepareMessage(input, options), db).then(() => {})
+        .catch((err: unknown) => dumpError(err, input, input.mid, options.output))
+    );
 
     bytesBar?.increment(bytes);
 
@@ -91,7 +113,7 @@ const ProgressPreset = {
     switch (type) {
       case 'eta':
         if (v === 0) return 'N/A'
-        return formatDistance(Date.now() + (v * 1000), Date.now(), { addSuffix: false });
+        return formatDistance(v??0 * 1000, 0, { addSuffix: false });
       case 'total':
       case 'value': 
         return (v > 1_000_000) ? filesize(v) : v.toString();

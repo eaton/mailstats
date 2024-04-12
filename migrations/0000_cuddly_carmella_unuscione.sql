@@ -1,9 +1,9 @@
 CREATE TABLE `address` (
 	`aid` text PRIMARY KEY NOT NULL,
 	`address` text,
-	`domain` text,
 	`name` text,
-	`meta` text
+	`domain` text,
+	`labels` text
 );
 --> statement-breakpoint
 CREATE TABLE `attachment` (
@@ -12,19 +12,21 @@ CREATE TABLE `attachment` (
 	`contentType` text,
 	`bytes` integer,
 	`filename` text,
-	`checksum` text,
-	`headers` text,
-	`meta` text
+	`checksum` text
 );
 --> statement-breakpoint
 CREATE TABLE `message` (
 	`mid` text PRIMARY KEY NOT NULL,
-	`thread` text,
-	`subject` text,
-	`recipient` text,
-	`sender` text,
+	`messageId` text,
+	`inReplyTo` text,
 	`date` text,
+	`subject` text,
+	`sender` text,
+	`recipient` text,
+	`text` text,
+	`html` text,
 	`headers` text,
+	`labels` text,
 	`meta` text
 );
 --> statement-breakpoint

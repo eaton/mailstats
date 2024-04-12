@@ -1,6 +1,7 @@
 import { MboxStreamer } from "@eatonfyi/mbox-streamer";
 import PQueue from "p-queue";
-import { formatMessage, MboxMessage } from "./util/index.js";
+import { parseMessage } from "./util/index.js";
+import { MboxMessage } from "./types.js";
 
 export type MboxQueueStatus = {
   bytesRead: number,
@@ -23,7 +24,7 @@ export function buildQueue(mailbox: string, func: MboxQueueTask): PQueue  {
   parser.on('message', (input, total, msgBytes, totalBytes) => {
     status.messagesRead = total;
     status.bytesRead = totalBytes;
-    q.add(() => func(formatMessage(input), msgBytes, status));
+    q.add(() => func(parseMessage(input), msgBytes, status));
   });
   
   return q;

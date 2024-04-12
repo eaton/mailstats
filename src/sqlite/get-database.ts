@@ -13,7 +13,12 @@ export function getDatabase(path = ':memory:'): DatabaseInstance {
   const db = drizzle(sqlite);
 
   if (dbNew) {
-    migrate(db, { migrationsFolder: "migrations" });
+    const sqlFile = jetpack.find({ matching: './migrations/0000_*.sql' }).pop();
+    if (sqlFile) {
+      const sql = jetpack.read(sqlFile);
+      if (sql) sqlite.exec(sql)
+    }
+    // migrate(db, { migrationsFolder: "migrations" });
   }
 
   return db;

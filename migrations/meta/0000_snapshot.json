@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "199c7048-61c4-4353-aae7-07abc986953b",
+  "id": "aa9ccaa0-9470-4e5f-8650-7247c2a2abd1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "address": {
@@ -21,13 +21,6 @@
           "notNull": false,
           "autoincrement": false
         },
-        "domain": {
-          "name": "domain",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "name": {
           "name": "name",
           "type": "text",
@@ -35,8 +28,15 @@
           "notNull": false,
           "autoincrement": false
         },
-        "meta": {
-          "name": "meta",
+        "domain": {
+          "name": "domain",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "labels": {
+          "name": "labels",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -92,20 +92,6 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
-        },
-        "headers": {
-          "name": "headers",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "meta": {
-          "name": "meta",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
         }
       },
       "indexes": {},
@@ -123,29 +109,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "thread": {
-          "name": "thread",
+        "messageId": {
+          "name": "messageId",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "subject": {
-          "name": "subject",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "recipient": {
-          "name": "recipient",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "sender": {
-          "name": "sender",
+        "inReplyTo": {
+          "name": "inReplyTo",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -158,8 +130,50 @@
           "notNull": false,
           "autoincrement": false
         },
+        "subject": {
+          "name": "subject",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "sender": {
+          "name": "sender",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "recipient": {
+          "name": "recipient",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "text": {
+          "name": "text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "html": {
+          "name": "html",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "headers": {
           "name": "headers",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "labels": {
+          "name": "labels",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
