@@ -68,9 +68,6 @@
     "mailparser": "^3.6.9",
     "micromatch": "^4.0.5",
     "natural": "^7.0.0",
-    "p-queue": "^8.0.1",
-    "wink-eng-lite-web-model": "^1.6.0",
-    "wink-nlp": "^2.2.0",
-    "wink-sentiment": "^5.0.2"
+    "p-queue": "^8.0.1"
   }
 }
